@@ -1,4 +1,4 @@
-module github.com/HasanRothi/go-utils
+module github.com/HasanRothi/go-utils-pkg
 
 go 1.23
 
