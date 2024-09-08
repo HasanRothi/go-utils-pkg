@@ -2,7 +2,7 @@ package structsutils
 
 import (
 	"fmt"
-	arrayutils "github.com/HasanRothi/go-utils/utils/array"
+	arrayutils "github.com/HasanRothi/go-utils-pkg/utils/array"
 	"reflect"
 	"strings"
 )
