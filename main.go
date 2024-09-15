@@ -4,10 +4,6 @@ import (
 	"fmt"
 )
 
-func init() {
-	fmt.Println("init")
-}
-
 func main() {
-	fmt.Println("main")
+	fmt.Println("Go Utils pkg")
 }
