@@ -47,9 +47,9 @@ func handlePanic(c *gin.Context) {
 		}
 
 		c.JSON(StatusCode, gin.H{
-			"code":    StatusCode,
-			"message": errStr,
-			"data":    Data,
+			"status_code": StatusCode,
+			"message":     errStr,
+			"data":        Data,
 		})
 
 	}
