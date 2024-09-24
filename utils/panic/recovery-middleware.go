@@ -7,6 +7,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"gorm.io/gorm"
 	"net/http"
+	"runtime"
+	"strings"
 )
 
 type HttpException struct {
@@ -27,6 +29,9 @@ func handlePanic(c *gin.Context) {
 	var Data map[string]interface{}
 
 	if err := recover(); err != nil {
+
+		defer printStrace()
+
 		var errStr string
 		switch v := err.(type) {
 
@@ -60,4 +65,29 @@ func getStatusCode(err error) int {
 		return http.StatusNotFound
 	}
 	return http.StatusUnprocessableEntity
+}
+
+func printStrace() {
+	// Capture file, function, and line number
+	pc, file, line, ok := runtime.Caller(2) // This should now capture the correct function
+	if ok {
+		fn := runtime.FuncForPC(pc)
+		funcName := fn.Name()
+
+		// Formatting the file path to get the last portion
+		shortFile := file
+		if idx := strings.LastIndex(file, "/"); idx != -1 {
+			shortFile = file[idx+1:]
+		}
+
+		// ANSI color codes
+		const (
+			ColorRed    = "\033[31m"
+			ColorYellow = "\033[33m"
+			ColorReset  = "\033[0m" // Reset to default color
+		)
+
+		// Print the actual function name and line number
+		fmt.Printf(ColorRed+"Panic occurred --> %s "+ColorYellow+"(%s:%d)"+ColorReset+"\n", funcName, shortFile, line)
+	}
 }
