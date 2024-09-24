@@ -30,7 +30,7 @@ func handlePanic(c *gin.Context) {
 
 	if err := recover(); err != nil {
 
-		defer printStrace()
+		defer printStrace(3) //to get the correct stack depth as runtime stack increase to another func
 
 		var errStr string
 		switch v := err.(type) {
@@ -67,9 +67,9 @@ func getStatusCode(err error) int {
 	return http.StatusUnprocessableEntity
 }
 
-func printStrace() {
+func printStrace(skip int) {
 	// Capture file, function, and line number
-	pc, file, line, ok := runtime.Caller(2) // This should now capture the correct function
+	pc, file, line, ok := runtime.Caller(skip) // This should now capture the correct function
 	if ok {
 		fn := runtime.FuncForPC(pc)
 		funcName := fn.Name()
