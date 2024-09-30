@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func CommonExternalGetCall(url string, queryParams ...ApiHelpers) (int, error, map[string]interface{}) {
+func Get(url string, queryParams ...ApiHelpers) (int, error, map[string]interface{}) {
 	req := gohttp.NewRequest()
 	var response map[string]interface{}
 
