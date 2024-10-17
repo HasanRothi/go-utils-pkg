@@ -1,46 +1,20 @@
 package httputils
 
 import (
-	"encoding/json"
-	"errors"
 	"github.com/nahid/gohttp"
-	"strconv"
 )
 
-func Get(url string, queryParams ...ApiHelpers) (int, error, map[string]interface{}) {
+func (postman *Postman) Get() {
+	if err := postman.validateGetRequest(); err != nil {
+		postman.ErrorMessage = err
+		postman.StatusCode = 400
+	}
+
+	postman.setDefaultHeaders()
+
 	req := gohttp.NewRequest()
-	var response map[string]interface{}
 
-	// Initialize default headers
-	defaultHeaders := map[string]string{
-		"content-type": "application/json",
-	}
-	query := map[string]string{}
-	headers := map[string]string{}
+	apiRes, err := req.Headers(postman.Headers).Query(postman.Queries).Get(postman.Url)
 
-	if queryParams != nil && len(queryParams) > 0 {
-		query = queryParams[0].Query
-		headers = queryParams[0].Headers
-		if headers == nil {
-			headers = make(map[string]string, 2)
-		}
-	}
-
-	for k, v := range defaultHeaders {
-		headers[k] = v
-	}
-
-	apiRes, err := req.Headers(headers).Query(query).Get(url)
-	if err == nil {
-		body, _ := apiRes.GetBodyAsString()
-		if apiRes.GetStatusCode() >= 500 {
-			return -1, errors.New(strconv.Itoa(apiRes.GetStatusCode()) + " | " + body), nil
-		}
-		if apiRes.GetStatusCode() >= 400 {
-			return -1, errors.New(strconv.Itoa(apiRes.GetStatusCode()) + " | " + body), nil
-		}
-		json.Unmarshal([]byte(body), &response)
-		return 201, nil, response
-	}
-	return 400, err, response
+	postman.setApiReturnData(apiRes, err)
 }
