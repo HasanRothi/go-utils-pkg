@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	fmt.Println("Go Utils pkg")
+	fmt.Println("Go Utils pkg..")
 }
